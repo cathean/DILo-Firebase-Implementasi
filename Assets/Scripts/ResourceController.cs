@@ -10,6 +10,7 @@ public class ResourceController : MonoBehaviour
     public Text ResourceUnlockCost;
 
     private ResourceConfig _config;
+
     private int _index;
     private int _level
     {
@@ -17,13 +18,13 @@ public class ResourceController : MonoBehaviour
         {
             // Menyimpan value yang di set ke _level pada Progress Data
             UserDataManager.Progress.ResourcesLevels[_index] = value;
-            UserDataManager.Save();
+            UserDataManager.Save (true);
         }
 
         get
         {
             // Mengecek apakah index sudah terdapat pada Progress Data
-            if(!UserDataManager.HasResources(_index))
+            if (!UserDataManager.HasResources (_index))
             {
                 // Jika tidak maka tampilkan level 1
                 return 1;
@@ -61,7 +62,7 @@ public class ResourceController : MonoBehaviour
         ResourceUnlockCost.text = $"Unlock Cost\n{ _config.UnlockCost }";
         ResourceUpgradeCost.text = $"Upgrade Cost\n{ GetUpgradeCost () }";
 
-        SetUnlocked (_config.UnlockCost == 0 || UserDataManager.HasResources(_index));
+        SetUnlocked (_config.UnlockCost == 0 || UserDataManager.HasResources (_index));
     }
 
     public double GetOutput ()
@@ -110,14 +111,13 @@ public class ResourceController : MonoBehaviour
     public void SetUnlocked (bool unlocked)
     {
         IsUnlocked = unlocked;
-
         if (unlocked)
         {
-            // Jika resources baru di unlock dan belum ada di Progress Data, maka tambahkan data
-            if (!UserDataManager.HasResources(_index))
+            // Jika resources baru di unlock dan belum ada di Progress Data, maka tambahkan data baru
+            if (!UserDataManager.HasResources (_index))
             {
-                UserDataManager.Progress.ResourcesLevels.Add(_level);
-                UserDataManager.Save();
+                UserDataManager.Progress.ResourcesLevels.Add (_level);
+                UserDataManager.Save (true);
             }
         }
 
